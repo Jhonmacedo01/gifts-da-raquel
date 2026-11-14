@@ -1,0 +1,55 @@
+1. O QUE O SISTEMA FAZ
+
+A loja apresenta ímãs personalizados, informa preços e envia um resumo de pedido para o WhatsApp. Raquel entra em um painel restrito para consultar pedidos e cadastrar novos. O conteúdo público é montado como site estático e os dados administrativos ficam no Supabase.
+
+2. POR QUE FOI FEITO ASSIM
+
+- O site é estático porque a parte pública não precisa de servidor próprio; o Render publica os arquivos gerados em `dist/`.
+- O build valida páginas, estilos, scripts e uma imagem de marca antes de publicar, evitando um `dist/` incompleto.
+- Os arquivos CSS recebem uma versão baseada no hash do conteúdo. Quando os estilos mudam, o navegador busca a nova URL mesmo com cache de assets.
+- As configurações do Supabase entram no build por variáveis explícitas. Assim a chave não fica no código-fonte, embora a chave publishable apareça no JavaScript entregue ao navegador.
+- RLS e a associação em `admin_users` protegem os dados. A chave publishable identifica o cliente, mas não substitui as políticas do banco.
+- O pedido público segue pelo WhatsApp porque ainda não há checkout, pagamento ou criação pública de pedidos.
+- Pedidos antigos podem ter frete `NULL`, pois o valor anterior não deve ser inventado. Os pedidos novos usam o padrão de R$ 10,00.
+- `robots.txt` e `sitemap.xml` publicam somente a loja e a política; rotas administrativas não são divulgadas para indexação.
+
+3. O QUE EU DEFENDERIA SE PERGUNTAREM “POR QUE VOCE FEZ ASSIM”
+
+- “Eu deixei a chave publishable fora do repositório. Ela ainda aparece no cliente porque o navegador precisa dela; quem limita as consultas e gravações é o RLS do Supabase.”
+- “Eu não gravo o pedido público como se estivesse confirmado. O cliente recebe uma estimativa e combina o pedido pelo WhatsApp.”
+- “Eu permito `NULL` para frete de registros antigos porque não há evidência para afirmar que eles pagaram R$ 10,00.”
+- “Eu desativei os módulos do painel que ainda não têm fluxo implementado para não apresentá-los como funções prontas.”
+- “Eu mantenho o build sem dependências adicionais e gero as páginas administrativas e os arquivos de configuração a partir do código-fonte.”
+- “Eu faço o build falhar quando falta um arquivo essencial, porque não quero que um deploy incompleto seja publicado como se tivesse dado certo.”
+- “Eu versiono a URL dos estilos pelo conteúdo para evitar que o cache mantenha CSS antigo depois de uma alteração.”
+
+4. LIMITACOES QUE EU ASSUMO DE PROPOSITO
+
+- O site não recebe fotos nem pagamentos e não cria pedidos públicos no banco.
+- O painel lista até 100 pedidos recentes e não tem paginação, edição de pedido ou mudança de status.
+- Agenda, estoque, clientes e financeiro ainda não estão disponíveis na interface.
+- Não há cálculo automático de dias úteis, feriados, notificações nem tarefas de produção.
+- O upload de fotos não existe; o bucket privado tem limites de tamanho e tipo, mas não faz validação real do conteúdo.
+- A faixa de preços é mantida no código da loja e no seed do Supabase; qualquer mudança precisa atualizar ambos.
+- O build confere uma lista de arquivos essenciais, mas não valida todos os links e mídias nem substitui a conferência no serviço publicado.
+- A loja pública agora tem regras próprias de layout no mesmo arquivo CSS usado pelo painel; a regressão anterior foi causada por haver apenas ajustes responsivos, sem os estilos base das seções da loja.
+
+5. SEGURANCA: O QUE FOI VERIFICADO
+
+- O servidor local aceita somente `GET` e `HEAD`, decodifica e valida os caminhos antes de servir arquivos e não retorna stack trace ao navegador.
+- As rotas do painel usam sessão Auth, associação administrativa, RLS e grants restritos. A RPC cria pedidos somente para o administrador.
+- Os dados interpolados na tela são escapados ou inseridos com `textContent`; consultas Supabase usam filtros do cliente PostgREST, sem concatenar texto em SQL.
+- A criação manual passa por limites do formulário e constraints de banco. O bucket declara tipos e tamanho máximo, mas inspeção do conteúdo do arquivo ainda não existe porque o upload não foi implementado.
+- Não há endpoint de escrita próprio nem CORS aberto. Render configura CSP e cabeçalhos de segurança; ainda é necessário conferir os valores ativos no serviço publicado.
+- A varredura do código-fonte não encontrou chave privada, senha, `service_role` ou token de serviço. A chave Supabase publishable é gerada no build e é pública por projeto. Um commit anterior já continha essa chave pública; o valor não é um segredo nem uma chave `service_role`.
+
+6. PERGUNTAS QUE PODEM ME FAZER SOBRE ESSE CODIGO
+
+1. O que RLS impede quando alguém copia a chave publishable do navegador?
+2. Como você verificaria que somente a conta de Raquel está associada em `admin_users`?
+3. Como a RPC garante que a criação do cliente, do pedido e do evento não fique parcialmente gravada?
+4. Por que o frete dos pedidos antigos pode ser nulo?
+5. Como você adicionaria paginação sem carregar todos os pedidos no navegador?
+6. Como você validaria o conteúdo real de uma foto além da extensão e do MIME informado?
+7. Que mudanças seriam necessárias para registrar um pedido público sem confiar no total calculado pelo navegador?
+8. Como o hash do CSS ajuda a evitar uma página sem estilo após um deploy?

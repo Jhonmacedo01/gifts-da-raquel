@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar | Gifts da Raquel</title>
+  <link rel="preconnect" href="https://hbjckqpqewyyejkfzowg.supabase.co">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/deploy.css">
+</head>
+<body>
+  <main class="login-page">
+    <section class="login-card">
+      <a class="login-brand" href="/">
+        <img src="/assets/images/brand/logo-gifts-da-raquel.jpg" alt="">
+        <span>Gifts <i>da</i> Raquel<small>PAINEL ADMINISTRATIVO</small></span>
+      </a>
+      <h1>Acesso da Raquel</h1>
+      <p class="login-intro">Entre com a conta administrativa cadastrada no Supabase.</p>
+      <div id="setup" class="login-setup" hidden role="status">
+        <b>Supabase não configurado nesta publicação</b>
+        <p>Defina <code>SUPABASE_URL</code> e <code>SUPABASE_PUBLISHABLE_KEY</code> nas variáveis de ambiente do Render e publique novamente. Para desenvolvimento local, consulte o <a href="https://github.com/Jhonmacedo01/Gifts-da-Raquel/blob/main/README.md" target="_blank" rel="noopener noreferrer">README</a>.</p>
+      </div>
+      <form id="login-form" class="login-form" hidden>
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" autocomplete="username" required maxlength="254" placeholder="voce@exemplo.com">
+        <label for="password">Senha</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="Sua senha">
+        <p id="login-error" class="login-error" role="alert" hidden></p>
+        <button class="login-submit" type="submit">Entrar no painel</button>
+      </form>
+      <a href="/" class="login-back">← Voltar para a loja</a>
+      <a href="/privacidade" class="login-back">Política de privacidade</a>
+    </section>
+    <p class="login-footnote">Acesso restrito à conta administrativa da Gifts da Raquel.</p>
+  </main>
+  <script defer src="/assets/js/vendor/supabase.js"></script>
+  <script type="module" src="/assets/js/login.js"></script>
+</body>
+</html>

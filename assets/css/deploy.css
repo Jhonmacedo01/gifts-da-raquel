@@ -1,0 +1,208 @@
+/* deploy.css — Ajustes de deploy sobre styles.css.
+   - Corrige overflow horizontal sem bloquear a rolagem vertical.
+   - Garante legibilidade dos textos críticos (subtítulo e resumo do pedido).
+   - Acessibilidade: foco visível, alto contraste, movimento reduzido.
+   - Polimento: seleção, âncoras, toque em telas pequenas, tipografia.
+   Carregado após styles.css; sem dependências externas. */
+
+/* Layout */
+.storefront {
+  overflow-x: clip;
+  scroll-padding-top: 88px;
+}
+
+/* Legibilidade — requisitos cobertos por testes */
+.storefront .hero-copy > p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.order-summary {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #6f5a60;
+}
+
+/* Foco visível consistente */
+.storefront a:focus-visible,
+.storefront button:focus-visible,
+.storefront input:focus-visible,
+.storefront select:focus-visible,
+.storefront textarea:focus-visible,
+.storefront summary:focus-visible,
+.login-page a:focus-visible,
+.login-page button:focus-visible,
+.login-page input:focus-visible,
+.app-shell a:focus-visible,
+.app-shell button:focus-visible,
+.app-shell input:focus-visible,
+.app-shell select:focus-visible,
+.app-shell textarea:focus-visible {
+  outline: 3px solid #c86983;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Seleção de texto na paleta da marca */
+::selection {
+  background: #f7d9e2;
+  color: #4b1f2d;
+}
+
+/* Controles nativos com a cor da marca */
+.storefront input[type="number"],
+.storefront input[type="text"],
+.login-page input,
+.app-shell input {
+  accent-color: #9e3157;
+}
+
+/* Tipografia: evitar linhas órfãs e títulos quebrados */
+.storefront h1,
+.storefront h2,
+.storefront h3 {
+  text-wrap: balance;
+}
+.storefront p {
+  text-wrap: pretty;
+}
+
+/* Rolagem suave, exceto para quem prefere menos movimento */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .storefront .store-primary:hover,
+  .primary-button:hover {
+    transform: none;
+  }
+}
+
+/* Toque confortável em telas pequenas */
+@media (max-width: 640px) {
+  .storefront .store-primary,
+  .storefront .store-secondary,
+  .storefront .store-header-cta {
+    min-height: 44px;
+  }
+  .storefront .hero-copy > p {
+    font-size: 15px;
+  }
+  .order-summary {
+    font-size: 14px;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: more) {
+  .storefront .hero-copy > p,
+  .order-summary,
+  .storefront .section-heading p {
+    color: #3d2a31;
+  }
+  .storefront .store-primary,
+  .storefront .store-header-cta,
+  .primary-button {
+    box-shadow: none;
+    outline: 1px solid currentColor;
+  }
+}
+
+/* Impressão: só o essencial */
+@media print {
+  .store-header,
+  .store-footer,
+  .menu-toggle,
+  .hero-actions,
+  .demo-note,
+  .topbar,
+  .sidebar,
+  .toast,
+  .modal-backdrop {
+    display: none !important;
+  }
+  .storefront,
+  .app-shell,
+  .login-page {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  a { color: inherit; text-decoration: underline; }
+}
+
+/* Redes sociais: ícones compactos no rodapé, em harmonia com a loja. */
+.storefront .store-footer .footer-links {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+.storefront .store-footer .footer-social {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.storefront .store-footer .social-link {
+  display: flex;
+  flex: 0 0 54px;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 54px;
+  min-height: 52px;
+  color: #735a60;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.2;
+}
+.storefront .store-footer .social-link svg {
+  display: block;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  padding: 7px;
+  border-radius: 50%;
+  background: #f9edf0;
+  color: #8f3152;
+  fill: currentColor;
+  transition: background-color .18s ease, color .18s ease, transform .18s ease;
+}
+.storefront .store-footer .social-link:hover svg {
+  background: #8f3152;
+  color: #fff;
+  transform: translateY(-2px);
+}
+.storefront .store-footer .social-link span {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.storefront .store-footer .social-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.storefront .store-footer .footer-utility {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+.storefront .store-footer .footer-utility a { font-size: 12px; }
+@media (max-width: 760px) {
+  .storefront .store-footer .footer-links { justify-items: center; }
+  .storefront .store-footer .footer-social { justify-content: center; gap: 6px; }
+  .storefront .store-footer .footer-utility { justify-content: center; }
+}

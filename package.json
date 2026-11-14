@@ -1,0 +1,12 @@
+{
+  "name": "gifts-da-raquel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Loja e prévia de painel administrativo da Gifts da Raquel",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && node server.js",
+    "start": "node build.js && node server.js",
+    "test": "node --test tests/*.test.cjs"
+  }
+}

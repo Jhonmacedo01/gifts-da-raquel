@@ -11,6 +11,11 @@
   scroll-padding-top: 88px;
 }
 
+/* Keep the browser's hidden attribute authoritative over component display rules. */
+[hidden] {
+  display: none !important;
+}
+
 /* Legibilidade — requisitos cobertos por testes */
 .storefront .hero-copy > p {
   font-size: 16px;
